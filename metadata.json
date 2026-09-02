@@ -1,0 +1,6 @@
+{
+  "name": "Lending Tracker & Reminders",
+  "description": "An Android-styled lending and interest collection tracker with custom repeating due dates, payment history, notification reminders, and Google Calendar sync.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

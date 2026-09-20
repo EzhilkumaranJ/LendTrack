@@ -23,6 +23,7 @@ import { DashboardStats } from './components/DashboardStats';
 import { EarningsVisualization } from './components/EarningsVisualization';
 import { UpcomingInterestList } from './components/UpcomingInterestList';
 import { BorrowersList } from './components/BorrowersList';
+import { TabletSidebarInsights } from './components/TabletSidebarInsights';
 import { AddLoanModal } from './components/AddLoanModal';
 import { PaymentModal } from './components/PaymentModal';
 import { PaymentHistoryModal } from './components/PaymentHistoryModal';
@@ -322,16 +323,35 @@ export default function App() {
           </div>
         )}
 
-        {/* Tab 1: Home Dashboard - Due Date Alert List */}
+        {/* Tab 1: Home Dashboard - Due Date Alert List & Tablet Hub */}
         {activeTab === 'home' && (
-          <div className="space-y-4">
-            {/* Upcoming Interest Schedule Sorted By Date */}
-            <UpcomingInterestList
-              loans={loans}
-              onOpenPayment={handleOpenPaymentModal}
-              onViewHistory={(loan) => setActiveHistoryLoan(loan)}
-              onOpenCalendarModal={(loan) => setIsCalendarOpen(true)}
-            />
+          <div className="space-y-5">
+            {/* Executive Portfolio Snapshot (Visible on all devices, especially impactful on tablets) */}
+            <DashboardStats loans={loans} currentMonthKey={currentMonthKey} />
+
+            {/* Tablet Dual-Pane / Responsive Split Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+              {/* Primary Column: Due Date Alerts & Repayment Schedule */}
+              <div className="lg:col-span-7 xl:col-span-8 space-y-4">
+                <UpcomingInterestList
+                  loans={loans}
+                  onOpenPayment={handleOpenPaymentModal}
+                  onViewHistory={(loan) => setActiveHistoryLoan(loan)}
+                  onOpenCalendarModal={(loan) => setIsCalendarOpen(true)}
+                />
+              </div>
+
+              {/* Tablet Sidebar Column: Collection Insights & Quick Utilities (Sticky on Tablet Landscape) */}
+              <div className="hidden lg:block lg:col-span-5 xl:col-span-4 sticky top-24 space-y-4">
+                <TabletSidebarInsights
+                  loans={loans}
+                  onOpenAddLoan={() => setIsAddLoanOpen(true)}
+                  onOpenCalendar={() => setIsCalendarOpen(true)}
+                  onOpenBackup={() => setIsBackupOpen(true)}
+                  onViewHistory={(loan) => setActiveHistoryLoan(loan)}
+                />
+              </div>
+            </div>
           </div>
         )}
 

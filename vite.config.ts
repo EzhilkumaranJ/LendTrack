@@ -11,42 +11,20 @@ export default defineConfig(() => {
       tailwindcss(),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'icon.svg'],
-        manifest: {
-          id: '/',
-          name: 'Lending Tracker & Reminders',
-          short_name: 'LendingApp',
-          description: 'An Android-styled lending and interest collection tracker with custom repeating due dates, payment history, notification reminders, and Google Calendar sync.',
-          theme_color: '#0f172a',
-          background_color: '#020617',
-          display: 'standalone',
-          orientation: 'any',
-          start_url: '/',
-          scope: '/',
-          icons: [
-            {
-              src: '/pwa-192x192.png',
-              sizes: '192x192',
-              type: 'image/png',
-              purpose: 'any',
-            },
-            {
-              src: '/pwa-512x512.png',
-              sizes: '512x512',
-              type: 'image/png',
-              purpose: 'any',
-            },
-            {
-              src: '/pwa-maskable-512x512.png',
-              sizes: '512x512',
-              type: 'image/png',
-              purpose: 'maskable',
-            },
-          ],
-        },
-        workbox: {
-          globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
-        },
+        includeAssets: [
+          'favicon.ico',
+          'apple-touch-icon.png',
+          'icon.svg',
+          'pwa-192x192.png',
+          'pwa-512x512.png',
+          'pwa-maskable-512x512.png',
+          'screenshot-desktop.png',
+          'screenshot-mobile.png',
+          'manifest.webmanifest',
+          'manifest.json',
+          'sw.js',
+        ],
+        manifest: false, // Use our static manifest file in /public/manifest.webmanifest
         devOptions: {
           enabled: true,
           type: 'module',

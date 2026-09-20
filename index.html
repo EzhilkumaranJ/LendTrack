@@ -2,19 +2,32 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="screen-orientation" content="natural" />
     <title>Lending Tracker & Reminders</title>
     <meta name="description" content="An Android-styled lending and interest collection tracker with custom repeating due dates, payment history, notification reminders, and Google Calendar sync." />
+    
+    <!-- PWA Web App Manifest -->
+    <link rel="manifest" href="/manifest.webmanifest" crossorigin="use-credentials" />
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- OpenGraph / Social Meta Tags -->
     <meta property="og:title" content="Lending Tracker & Reminders" />
     <meta property="og:description" content="An Android-styled lending and interest collection tracker with custom repeating due dates, payment history, notification reminders, and Google Calendar sync." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
+    
+    <!-- Android & Mobile Theme Settings -->
     <meta name="theme-color" content="#0f172a" />
     <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="Lending Tracker" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Lending Tracker" />
+    
+    <!-- Icons -->
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/pwa-192x192.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   </head>
   <body class="bg-slate-950 text-slate-100 antialiased selection:bg-emerald-500 selection:text-white">

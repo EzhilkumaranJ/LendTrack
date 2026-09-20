@@ -9,7 +9,11 @@ import {
   Sparkles,
   Volume2,
   Database,
-  Download
+  Download,
+  LayoutDashboard,
+  Users,
+  BarChart3,
+  Tablet
 } from 'lucide-react';
 import { AppNotification } from '../types';
 
@@ -58,7 +62,10 @@ export const AndroidHeader: React.FC<AndroidHeaderProps> = ({
         <div className="flex items-center gap-2">
           <span>{currentTime || '09:41'}</span>
           <span className="hidden sm:inline-block text-[11px] text-slate-500">•</span>
-          <span className="hidden sm:inline-block text-[11px] text-slate-400">Pad 5G Tablet View</span>
+          <span className="hidden sm:inline-flex items-center gap-1 text-[11px] text-emerald-400 font-medium">
+            <Tablet className="w-3 h-3" />
+            <span>Pad 5G Tablet View</span>
+          </span>
         </div>
         <div className="flex items-center gap-2.5">
           <span className="text-[10px] bg-emerald-500/20 text-emerald-300 font-semibold px-2 py-0.5 rounded">
@@ -141,39 +148,42 @@ export const AndroidHeader: React.FC<AndroidHeaderProps> = ({
         </div>
 
         {/* Navigation Tabs (Material You pill styling with tablet responsive spacing) */}
-        <div className="flex items-center gap-2 sm:gap-3 mt-3 pt-2 border-t border-slate-800/60 max-w-2xl">
+        <div className="flex items-center gap-2 sm:gap-3 mt-3 pt-2 border-t border-slate-800/60 max-w-3xl">
           <button
             id="tab-home-btn"
             onClick={() => setActiveTab('home')}
-            className={`flex-1 py-2 px-3.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-1.5 ${
+            className={`flex-1 py-2.5 px-3.5 sm:px-5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-2 ${
               activeTab === 'home'
                 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
                 : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
             }`}
           >
-            <span>Dashboard & Due Dates</span>
+            <LayoutDashboard className="w-4 h-4 shrink-0" />
+            <span className="truncate">Dashboard & Dues</span>
           </button>
           <button
             id="tab-borrowers-btn"
             onClick={() => setActiveTab('borrowers')}
-            className={`flex-1 py-2 px-3.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-1.5 ${
+            className={`flex-1 py-2.5 px-3.5 sm:px-5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-2 ${
               activeTab === 'borrowers'
                 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
                 : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
             }`}
           >
-            <span>Borrowers & History</span>
+            <Users className="w-4 h-4 shrink-0" />
+            <span className="truncate">Borrowers & History</span>
           </button>
           <button
             id="tab-analytics-btn"
             onClick={() => setActiveTab('analytics')}
-            className={`flex-1 py-2 px-3.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-1.5 ${
+            className={`flex-1 py-2.5 px-3.5 sm:px-5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-2 ${
               activeTab === 'analytics'
                 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
                 : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
             }`}
           >
-            <span>Earnings Analytics</span>
+            <BarChart3 className="w-4 h-4 shrink-0" />
+            <span className="truncate">Earnings Analytics</span>
           </button>
         </div>
       </div>

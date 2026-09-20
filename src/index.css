@@ -1,1 +1,14 @@
 @import "tailwindcss";
+
+/* Mobile Safe-Area & Touch Ergonomics */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .pb-safe {
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* Prevent double-tap zoom on buttons and smooth scroll on phones */
+button, a {
+  touch-action: manipulation;
+}
+

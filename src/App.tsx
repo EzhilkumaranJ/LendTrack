@@ -19,6 +19,7 @@ import {
 import { playNotificationSound, triggerSystemNotification } from './utils/notifications';
 
 import { AndroidHeader } from './components/AndroidHeader';
+import { AndroidBottomNav } from './components/AndroidBottomNav';
 import { DashboardStats } from './components/DashboardStats';
 import { EarningsVisualization } from './components/EarningsVisualization';
 import { UpcomingInterestList } from './components/UpcomingInterestList';
@@ -280,7 +281,7 @@ export default function App() {
   const monthlyStats = calculateMonthlyEarningsStats(loans);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 pb-20 selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen bg-slate-950 text-slate-100 pb-24 md:pb-16 selection:bg-emerald-500 selection:text-white">
       {/* Android Top Header */}
       <AndroidHeader
         unreadCount={unreadNotifCount}
@@ -296,7 +297,7 @@ export default function App() {
       />
 
       {/* Main Container */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6 space-y-5">
+      <main className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 py-3.5 sm:py-6 space-y-4 sm:space-y-5">
         {/* Banner Alert for Overdue or Due Today */}
         {loans.some((l) => l.status === 'active' && l.nextInterestDueDate <= '2026-08-31') && (
           <div 
@@ -449,15 +450,25 @@ export default function App() {
         )}
       </main>
 
-      {/* Floating Action Button (FAB) for Quick Add */}
+      {/* Floating Action Button (FAB) for Quick Add - Visible on tablets/desktop, bottom nav add button is used on phone */}
       <button
         id="fab-add-loan"
         onClick={() => setIsAddLoanOpen(true)}
-        className="fixed right-5 bottom-5 z-20 w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white shadow-xl shadow-emerald-500/30 flex items-center justify-center transition-all hover:scale-105 active:scale-95"
+        className="hidden md:flex fixed right-6 bottom-6 z-20 w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white shadow-xl shadow-emerald-500/30 items-center justify-center transition-all hover:scale-105 active:scale-95"
         title="Add New Loan Entry"
       >
         <Plus className="w-7 h-7" />
       </button>
+
+      {/* Mobile Bottom Navigation Bar */}
+      <AndroidBottomNav
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        onOpenAddLoan={() => setIsAddLoanOpen(true)}
+        onOpenNotifications={() => setIsNotificationsOpen(true)}
+        onOpenBackup={() => setIsBackupOpen(true)}
+        unreadNotifCount={unreadNotifCount}
+      />
 
       {/* Modals */}
       {isAddLoanOpen && (

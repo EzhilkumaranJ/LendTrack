@@ -23,6 +23,7 @@ import {
   downloadBackupFile, 
   parseAndValidateBackup 
 } from '../utils/storage';
+import { SPREADSHEET_LOANS, INITIAL_SPREADSHEET_NOTIFICATIONS } from '../data/spreadsheetData';
 import { formatCurrency } from '../utils/dateUtils';
 import { playNotificationSound } from '../utils/notifications';
 
@@ -386,6 +387,22 @@ export const BackupModal: React.FC<BackupModalProps> = ({
                   </button>
                 </div>
               )}
+              {/* Reset to Default Google Sheet Sample Data Option */}
+              <div className="pt-2 border-t border-slate-800">
+                <button
+                  id="reset-to-default-sheets-btn"
+                  type="button"
+                  onClick={() => {
+                    onImportData(SPREADSHEET_LOANS, INITIAL_SPREADSHEET_NOTIFICATIONS, 'replace');
+                    playNotificationSound('payment');
+                    onClose();
+                  }}
+                  className="w-full py-2.5 px-3 rounded-xl text-xs font-semibold text-slate-300 hover:text-emerald-300 bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 hover:border-emerald-500/40 transition-all flex items-center justify-center gap-2"
+                >
+                  <RefreshCw className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Reload Default Google Sheet Borrowers Data</span>
+                </button>
+              </div>
             </div>
           )}
         </div>

@@ -292,3 +292,89 @@ export function downloadIcs(loan: LoanEntry) {
   link.click();
   document.body.removeChild(link);
 }
+
+// Calculate days difference between two ISO dates (dateB - dateA)
+export function getDaysBetween(dateA: string, dateB: string): number {
+  const d1 = new Date(dateA + 'T00:00:00');
+  const d2 = new Date(dateB + 'T00:00:00');
+  if (isNaN(d1.getTime()) || isNaN(d2.getTime())) return 0;
+  return Math.round((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+// Result structure for loan timeline, payments difference, skipped cycles, and total delayed days
+export interface LoanTermDelayMetrics {
+  daysFromStartToLatestPayment: number; // Days from starting date to the latest payment recorded
+  daysFromStartToToday: number; // Overall loan term duration so far
+  skippedPaymentsCount: number; // Total number of skipped payments
+  skippedEquivalentDays: number; // Days of interest waived/deferred due to skipped payments
+  currentOverdueDays: number; // Days currently overdue if active and past nextInterestDueDate
+  totalDelayedDays: number; // Cumulative days interest has been delayed/deferred across the term
+  paymentGaps: { date: string; daysFromStart: number; daysSincePrevious: number; type: string }[];
+}
+
+export function calculateLoanTermDelayMetrics(
+  loan: LoanEntry,
+  referenceToday: string = '2026-08-31'
+): LoanTermDelayMetrics {
+  const startDate = loan.startDate || referenceToday;
+  const daysFromStartToToday = Math.max(0, getDaysBetween(startDate, referenceToday));
+
+  // Determine cycle length in days based on loan recurrence
+  let cycleDays = 30; // default for monthly
+  if (loan.recurrence === 'weekly') cycleDays = 7;
+  else if (loan.recurrence === 'biweekly') cycleDays = 14;
+  else if (loan.recurrence === 'quarterly') cycleDays = 90;
+  else if (loan.recurrence === 'custom_days' && loan.customIntervalDays) cycleDays = loan.customIntervalDays;
+  else cycleDays = 30;
+
+  // Payments ordered chronologically ascending
+  const chronologicalPayments = [...loan.payments].sort((a, b) => a.date.localeCompare(b.date));
+
+  let daysFromStartToLatestPayment = 0;
+  if (chronologicalPayments.length > 0) {
+    const latestPayment = chronologicalPayments[chronologicalPayments.length - 1];
+    daysFromStartToLatestPayment = Math.max(0, getDaysBetween(startDate, latestPayment.date));
+  }
+
+  // Calculate gaps between payments
+  let prevDate = startDate;
+  const paymentGaps = chronologicalPayments.map((p) => {
+    const daysSincePrevious = Math.max(0, getDaysBetween(prevDate, p.date));
+    const daysFromStart = Math.max(0, getDaysBetween(startDate, p.date));
+    prevDate = p.date;
+    return {
+      date: p.date,
+      daysFromStart,
+      daysSincePrevious,
+      type: p.type,
+    };
+  });
+
+  // Count skipped payments
+  const skippedPayments = loan.payments.filter((p) => p.type === 'skip_interest');
+  const skippedPaymentsCount = skippedPayments.length;
+  const skippedEquivalentDays = skippedPaymentsCount * cycleDays;
+
+  // Current active overdue days
+  let currentOverdueDays = 0;
+  if (loan.status === 'active' && loan.nextInterestDueDate) {
+    const diff = getDaysBetween(loan.nextInterestDueDate, referenceToday);
+    if (diff > 0) {
+      currentOverdueDays = diff;
+    }
+  }
+
+  // Total delayed days: combination of currently overdue interest days + days deferred through skipped payment cycles
+  const totalDelayedDays = currentOverdueDays + skippedEquivalentDays;
+
+  return {
+    daysFromStartToLatestPayment,
+    daysFromStartToToday,
+    skippedPaymentsCount,
+    skippedEquivalentDays,
+    currentOverdueDays,
+    totalDelayedDays,
+    paymentGaps,
+  };
+}
+

@@ -1,0 +1,16 @@
+Date,Amount,Interest,,,,
+16th July 2025,200000,1.50%,,borrowed,,
+August 2025,,3000,,Credited on 20th,,"10,500"
+September 2025,,3000,,Credited on 20th,,"10,500"
+October 2025,,,,Delayed 10 days to match monthly calendar ,,
+November 2025,,3000,4.11.2025,,,"10,500"
+December 2025,,3000,3.12.2025,,,"10,500"
+January 2026,,3000,3.01.2026,,,"10,500"
+February 2026,,3000,02.02.2026,,,"10,500"
+March 2026,,3000,10.3.2026,Late by 10 days,,"10,500"
+April 2026,,3000,8.4.2026,,,"10,500"
+May 2026,,3000,8.5.2026,By hand,,
+June 2026,,3000,3.6.2026,By hand,,
+July 2026,,3000,4.7.2026,,,"10,500"
+August 2026,,3000,12.8.2026,,,"10,500"
+September 2026,,3000,4.9.2026,,,

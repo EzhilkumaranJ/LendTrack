@@ -26,6 +26,7 @@ import { UpcomingInterestList } from './components/UpcomingInterestList';
 import { BorrowersList } from './components/BorrowersList';
 import { TabletSidebarInsights } from './components/TabletSidebarInsights';
 import { AddLoanModal } from './components/AddLoanModal';
+import { EditBorrowerModal } from './components/EditBorrowerModal';
 import { PaymentModal } from './components/PaymentModal';
 import { PaymentHistoryModal } from './components/PaymentHistoryModal';
 import { NotificationCenterModal } from './components/NotificationCenterModal';
@@ -48,6 +49,7 @@ export default function App() {
   const [activePaymentLoan, setActivePaymentLoan] = useState<LoanEntry | null>(null);
   const [activePaymentType, setActivePaymentType] = useState<PaymentType>('interest');
   const [activeHistoryLoan, setActiveHistoryLoan] = useState<LoanEntry | null>(null);
+  const [activeEditLoan, setActiveEditLoan] = useState<LoanEntry | null>(null);
 
   // Load initial data
   useEffect(() => {
@@ -61,7 +63,7 @@ export default function App() {
   }, []);
 
   const evaluateReminders = (currentLoans: LoanEntry[], currentNotifs: AppNotification[]) => {
-    const todayStr = '2026-08-31';
+    const todayStr = new Date().toISOString().split('T')[0];
     let newNotifs = [...currentNotifs];
     let triggeredUrgent = false;
 
@@ -205,6 +207,29 @@ export default function App() {
     setActivePaymentLoan(loan);
   };
 
+  // Edit borrower details anytime
+  const handleSaveEditedLoan = (updatedLoan: LoanEntry) => {
+    const updated = loans.map((l) => (l.id === updatedLoan.id ? updatedLoan : l));
+    setLoans(updated);
+    saveStoredLoans(updated);
+
+    // Update notifications if borrower name or terms changed
+    const updatedNotifs = notifications.map((n) => {
+      if (n.loanId === updatedLoan.id) {
+        return {
+          ...n,
+          borrowerName: updatedLoan.borrowerName,
+          dueDate: updatedLoan.nextInterestDueDate,
+          amountDue: updatedLoan.interestPerPeriod,
+        };
+      }
+      return n;
+    });
+    setNotifications(updatedNotifs);
+    saveStoredNotifications(updatedNotifs);
+    playNotificationSound('payment');
+  };
+
   // Delete loan
   const handleDeleteLoan = (loanId: string) => {
     const updated = loans.filter((l) => l.id !== loanId);
@@ -299,7 +324,7 @@ export default function App() {
       {/* Main Container */}
       <main className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 py-3.5 sm:py-6 space-y-4 sm:space-y-5">
         {/* Banner Alert for Overdue or Due Today */}
-        {loans.some((l) => l.status === 'active' && l.nextInterestDueDate <= '2026-08-31') && (
+        {loans.some((l) => l.status === 'active' && l.nextInterestDueDate <= new Date().toISOString().split('T')[0]) && (
           <div 
             id="due-alert-banner"
             className="bg-amber-950/40 border border-amber-500/40 rounded-2xl p-4 sm:p-4.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-md"
@@ -380,6 +405,7 @@ export default function App() {
               onDeleteLoan={handleDeleteLoan}
               onOpenAddLoan={() => setIsAddLoanOpen(true)}
               onOpenBackup={() => setIsBackupOpen(true)}
+              onEditLoan={(loan) => setActiveEditLoan(loan)}
             />
           </div>
         )}
@@ -486,6 +512,16 @@ export default function App() {
           initialType={activePaymentType}
           onClose={() => setActivePaymentLoan(null)}
           onRecordPayment={handleRecordPayment}
+        />
+      )}
+
+      {activeEditLoan && (
+        <EditBorrowerModal
+          loan={activeEditLoan}
+          isOpen={!!activeEditLoan}
+          onClose={() => setActiveEditLoan(null)}
+          onSaveLoan={handleSaveEditedLoan}
+          onDeleteLoan={handleDeleteLoan}
         />
       )}
 
